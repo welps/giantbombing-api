@@ -9,6 +9,19 @@ var GiantBombFactory = function (config){
     };
 }
 
+test.before('Set up GiantBombAPI', it => {
+    var mockConfig = {
+        apiKey: '12345abc',
+        useCache: true,
+        cacheOptions: {
+            host: 'localhost',
+            port: 6379
+        }
+    }
+
+    GiantBombAPI = GiantBombFactory(mockConfig)();
+});
+
 test('throws error if not passed config as an object', it => {
     it.throws(GiantBombFactory(), 'Configuration must be passed as an object');
 });
@@ -19,6 +32,6 @@ test('throws error if not passed API key as a string', it => {
 });
 
 test('has an api key', it => {
-    GiantBombAPI = GiantBombFactory({apiKey: '12345abc'})();
     it.same(GiantBombAPI.apiKey, '12345abc');
 });
+
