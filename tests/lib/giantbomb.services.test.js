@@ -91,19 +91,27 @@ test.before('stub send request service', it => {
     mockSendRequest = sinon.stub(GiantBombAPI, 'sendRequest');
 });
 
-test('all services call internal send request function', it => {
+test('throws error if options not passed as object', it => {
     services.forEach(function(service){
-        GiantBombAPI[service]();
+        it.throws(function(){
+            GiantBombAPI[service]();
+        }, 'Options must be passed as object');
+    });
+});
+
+test('call internal send request function', it => {
+    services.forEach(function(service){
+        GiantBombAPI[service]({});
     });
 
     it.same(mockSendRequest.callCount, services.length);
 });
 
-test('all services provide their resource path when calling send request function', it => {
-    for (var i = 0; i < services.length; i++){
-        GiantBombAPI[services[i]]();
+test('provide their resource path when calling send request function', it => {
+    services.forEach(function(service, index){
+        GiantBombAPI[service]({});
 
-        it.same(mockSendRequest.lastCall.args[0], resources[i] + '/');
-    }
+        it.same(mockSendRequest.lastCall.args[0], resources[index] + '/');
+    });
 });
 
