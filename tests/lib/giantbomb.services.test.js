@@ -1,6 +1,7 @@
 import test from 'ava';
 
 var sinon = require('sinon');
+var querystring = require('querystring');
 var giantbombapi = require('../../lib/giantbomb');
 var GiantBombAPI;
 
@@ -91,7 +92,9 @@ test.before('Convert resources to service names', it => {
 
 test.before('Set up mock options and callback for service calls', it => {
     mockOptions = {
-
+        resources: 'game',
+        field_list: 'name,deck,platforms',
+        resource_type: 'game'
     };
 
     mockCallback = function(){
@@ -135,4 +138,12 @@ test('provide their resource path when calling send request function', it => {
     });
 });
 
+test('serialize options into a query string when calling send request function', it => {
+    var mockQueryString = querystring.stringify(mockOptions);
 
+    services.forEach(function(service){
+        GiantBombAPI[service](mockOptions, mockCallback);
+
+        it.same(mockSendRequest.lastCall.args[1], mockQueryString);
+    });
+});
