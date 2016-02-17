@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "ava": "^0.11.0",
+    "rewire": "^2.5.1",
     "sinon": "^1.17.3"
   },
   "ava": {
