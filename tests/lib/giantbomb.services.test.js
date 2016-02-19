@@ -85,7 +85,7 @@ test.before('Convert resources to service names', it => {
     });
 });
 
-test.before('Set up mock options and callback for service calls', it => {
+test.before('Mock options and callback for service calls', it => {
     mockOptions = {
         resources: 'game',
         field_list: 'name,deck,platforms',
