@@ -1,8 +1,8 @@
 {
   "name": "giantbombing-api",
   "version": "1.0.0",
-  "description": "GiantBomb API wrapper with optional caching via redis",
-  "main": "index.js",
+  "description": "Easy to use GiantBomb API wrapper for NodeJS",
+  "main": "./lib/",
   "scripts": {
     "test": "ava tests/*",
     "example": "node ./example/app.js"
