@@ -13,11 +13,6 @@ var GiantBombFactory = function (config){
 test.before('Set up GiantBombAPI', it => {
     var mockConfig = {
         apiKey: '12345abc',
-        useCache: true,
-        cacheOptions: {
-            host: 'localhost',
-            port: 6379
-        }
     };
 
     GiantBombAPI = GiantBombFactory(mockConfig)();

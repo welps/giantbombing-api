@@ -24,7 +24,6 @@ test.before('Set up GiantBombAPI', it => {
     GiantBombAPI = new giantbombapi(mockConfig);
 });
 
-
 test.before('Mock request dependency', it => {
     mockRequest = sinon.stub();
 
