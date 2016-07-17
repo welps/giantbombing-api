@@ -1,6 +1,6 @@
 {
   "name": "giantbombing-api",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "GiantBomb API wrapper with optional caching via redis",
   "main": "index.js",
   "scripts": {
