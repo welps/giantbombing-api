@@ -4,7 +4,8 @@
   "description": "GiantBomb API wrapper with optional caching via redis",
   "main": "index.js",
   "scripts": {
-    "test": "ava tests/*"
+    "test": "ava tests/*",
+    "example": "node ./example/app.js"
   },
   "repository": {
     "type": "git",
