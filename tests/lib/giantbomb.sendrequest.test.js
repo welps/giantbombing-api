@@ -19,11 +19,6 @@ var mockBody;
 test.before('Set up GiantBombAPI', it => {
     var mockConfig = {
         apiKey: '12345abc',
-        useCache: true,
-        cacheOptions: {
-            host: 'localhost',
-            port: 6379
-        }
     };
 
     GiantBombAPI = new giantbombapi(mockConfig);
@@ -50,16 +45,15 @@ test('calls request method', it => {
 test('passes resource path to request method', it => {
     GiantBombAPI.sendRequest(mockResourcePath, mockOptionsQuery, mockCallback);
 
-    // not yet in ava - see a10b9e8bab1544fbb966f80beacb7b7e43ff0d24
-    //it.regex(mockRequest.firstCall.args[0], mockOptionsQuery);
-
+    var regex = new RegExp(mockResourcePath, 'g');
+    it.regex(mockRequest.firstCall.args[0], regex);
 });
 
 test('passes query to request method', it => {
     GiantBombAPI.sendRequest(mockResourcePath, mockOptionsQuery, mockCallback);
 
-    // not yet in ava - see a10b9e8bab1544fbb966f80beacb7b7e43ff0d24
-    //it.regex(mockRequest.firstCall.args[0], mockOptionsQuery);
+    var regex = new RegExp(mockOptionsQuery, 'g');
+    it.regex(mockRequest.firstCall.args[0], regex);
 });
 
 test.before('Mock parameters for mocked request callback', it => {
@@ -89,7 +83,7 @@ test('callback returns null error and an object upon successful request', it => 
 
     mockSuccessfulRequestCallback();
 
-    it.same(null, mockCallback.lastCall.args[0]);
+    it.deepEqual(null, mockCallback.lastCall.args[0]);
     it.is('object', typeof mockCallback.lastCall.args[1]);
 });
 
@@ -98,5 +92,5 @@ test('callback returns error upon failed request', it => {
 
     mockFailedRequestCallback();
 
-    it.same('Mock error', mockCallback.lastCall.args[0]);
+    it.deepEqual('Mock error', mockCallback.lastCall.args[0]);
 });

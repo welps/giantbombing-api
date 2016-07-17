@@ -122,14 +122,14 @@ test('call internal send request function', it => {
         GiantBombAPI[service](mockOptions, mockCallback);
     });
 
-    it.same(mockSendRequest.callCount, services.length);
+    it.deepEqual(mockSendRequest.callCount, services.length);
 });
 
 test('provide their resource path when calling send request function', it => {
     services.forEach(function(service, index){
         GiantBombAPI[service](mockOptions, mockCallback);
 
-        it.same(mockSendRequest.lastCall.args[0], resources[index] + '/');
+        it.deepEqual(mockSendRequest.lastCall.args[0], resources[index] + '/');
     });
 });
 
@@ -139,6 +139,6 @@ test('serialize options into a query string when calling send request function',
     services.forEach(function(service){
         GiantBombAPI[service](mockOptions, mockCallback);
 
-        it.same(mockSendRequest.lastCall.args[1], mockQueryString);
+        it.deepEqual(mockSendRequest.lastCall.args[1], mockQueryString);
     });
 });
