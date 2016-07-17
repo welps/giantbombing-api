@@ -13,6 +13,8 @@ var mockSuccessfulRequestCallback;
 var mockFailedRequestCallback;
 
 var mockError;
+var mockErrorResponse;
+var mockErrorBody;
 var mockResponse;
 var mockBody;
 
@@ -56,7 +58,6 @@ test('passes query to request method', it => {
 });
 
 test.before('Mock parameters for mocked request callback', it => {
-    mockError = 'Mock error';
     mockResponse = {statusCode: 200};
     mockBody = JSON.stringify({mockItem: 'Mock Item'});
 
@@ -64,8 +65,12 @@ test.before('Mock parameters for mocked request callback', it => {
         mockRequest.lastCall.args[1](null, mockResponse, mockBody);
     };
 
+    mockError = 'Mock Error';
+    mockErrorResponse = {statusCode: 404};
+    mockErrorBody = "<p> 404 page not found </p>"; 
+
     mockFailedRequestCallback = function(){
-        mockRequest.lastCall.args[1](mockError, mockResponse);
+        mockRequest.lastCall.args[1](mockError, mockErrorResponse, mockErrorBody);
     };
 });
 
@@ -82,14 +87,21 @@ test('callback returns null error and an object upon successful request', it => 
 
     mockSuccessfulRequestCallback();
 
+    var returnBody = {};
+    returnBody.mockItem = JSON.parse(mockBody).mockItem;
+    returnBody.http_status = mockResponse.statusCode;
+
     it.deepEqual(null, mockCallback.lastCall.args[0]);
     it.is('object', typeof mockCallback.lastCall.args[1]);
+    it.deepEqual(returnBody, mockCallback.lastCall.args[1]);
 });
 
 test('callback returns error upon failed request', it => {
     GiantBombAPI.sendRequest(mockResourcePath, mockOptionsQuery, mockCallback);
 
-    mockFailedRequestCallback();
+    var returnBody = {};
+    returnBody.http_status = mockErrorResponse.statusCode;
 
-    it.deepEqual('Mock error', mockCallback.lastCall.args[0]);
+    mockFailedRequestCallback();
+    it.deepEqual(returnBody, mockCallback.lastCall.args[0]);
 });

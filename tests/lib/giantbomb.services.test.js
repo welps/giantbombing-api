@@ -4,12 +4,64 @@ var sinon = require('sinon');
 var querystring = require('querystring');
 var giantbombapi = require('../../lib/giantbomb');
 var GiantBombAPI;
-
 var mockSendRequest;
-var resources;
-var services;
+var singleNamedServices;
+var pluralNamedServices;
+var mockId;
 var mockOptions;
 var mockCallback;
+
+var singleNamedResources = [
+    'accessory',
+    'character',
+    'chat',
+    'company',
+    'concept',
+    'franchise',
+    'game',
+    'game_rating',
+    'genre',
+    'location',
+    'object',
+    'person',
+    'platform',
+    'promo',
+    'rating_board',
+    'region',
+    'release',
+    'review',
+    'theme',
+    'user_review',
+    'video',
+    'video_type'
+];
+
+var pluralNamedResources = [
+    'accessories',
+    'characters',
+    'chats',
+    'companies',
+    'concepts',
+    'franchises',
+    'games',
+    'game_ratings',
+    'genres',
+    'locations',
+    'objects',
+    'people',
+    'platforms',
+    'promos',
+    'rating_boards',
+    'regions',
+    'releases',
+    'reviews',
+    'search',
+    'themes',
+    'types',
+    'user_reviews',
+    'videos',
+    'video_types'
+];
 
 test.before('Set up GiantBombAPI', it => {
     var mockConfig = {
@@ -20,7 +72,6 @@ test.before('Set up GiantBombAPI', it => {
 });
 
 test.before('Convert resources to service names', it => {
-
     var capitalizeNames = function(name){
         var capitalizedNames = name.split('_').map(function(name){
             return name.charAt(0).toUpperCase() + name.substr(1);
@@ -29,63 +80,22 @@ test.before('Convert resources to service names', it => {
         return capitalizedNames.join('');
     };
 
-    // All of GiantBomb's resources
-    resources = [
-        'accessory',
-        'accessories',
-        'character',
-        'characters',
-        'chat',
-        'chats',
-        'company',
-        'companies',
-        'concept',
-        'concepts',
-        'franchise',
-        'franchises',
-        'game',
-        'games',
-        'game_rating',
-        'game_ratings',
-        'genre',
-        'genres',
-        'location',
-        'locations',
-        'object',
-        'objects',
-        'person',
-        'people',
-        'platform',
-        'platforms',
-        'promo',
-        'promos',
-        'rating_board',
-        'rating_boards',
-        'region',
-        'regions',
-        'release',
-        'releases',
-        'review',
-        'reviews',
-        'search',
-        'theme',
-        'themes',
-        'types',
-        'user_review',
-        'user_reviews',
-        'video',
-        'videos',
-        'video_type',
-        'video_types'
-    ];
+    var generateServices = function(serviceNames) {
+        var namedServices = serviceNames.map(function(serviceName){
+            return 'get' + capitalizeNames(serviceName);
+        });
+
+        return namedServices;
+    }
 
     // Convert resources to service names
-    services = resources.map(function(resourceName){
-        return 'get' + capitalizeNames(resourceName);
-    });
+    singleNamedServices = generateServices(singleNamedResources);
+    pluralNamedServices = generateServices(pluralNamedResources);
 });
 
 test.before('Mock options and callback for service calls', it => {
+    mockId = '12345';
+
     mockOptions = {
         resources: 'game',
         field_list: 'name,deck,platforms',
@@ -97,8 +107,21 @@ test.before('Mock options and callback for service calls', it => {
     };
 });
 
+test('throws error if id not passed for single resources', it => {
+    singleNamedServices.forEach(function(service){
+        it.throws(function(){
+            GiantBombAPI[service]();
+        }, 'Single named resource calls (ex: game, person, user_review) must be passed an ID');
+    });
+});
+
 test('throws error if options not passed as object', it => {
-    services.forEach(function(service){
+    singleNamedServices.forEach(function(service){
+        it.throws(function(){
+            GiantBombAPI[service](mockId);
+        }, 'Options must be passed as object');
+    });
+    pluralNamedServices.forEach(function(service){
         it.throws(function(){
             GiantBombAPI[service]();
         }, 'Options must be passed as object');
@@ -106,7 +129,12 @@ test('throws error if options not passed as object', it => {
 });
 
 test('throws error if callback not passed as function', it=> {
-    services.forEach(function(service){
+    singleNamedServices.forEach(function(service){
+        it.throws(function(){
+            GiantBombAPI[service](mockId, mockOptions);
+        }, 'Callback must be passed as function');
+    });
+    pluralNamedServices.forEach(function(service){
         it.throws(function(){
             GiantBombAPI[service](mockOptions);
         }, 'Callback must be passed as function');
@@ -118,25 +146,39 @@ test.before('stub send request service', it => {
 });
 
 test('call internal send request function', it => {
-    services.forEach(function(service){
+    singleNamedServices.forEach(function(service){
+        GiantBombAPI[service](mockId, mockOptions, mockCallback);
+    });
+
+    pluralNamedServices.forEach(function(service){
         GiantBombAPI[service](mockOptions, mockCallback);
     });
 
-    it.deepEqual(mockSendRequest.callCount, services.length);
+    it.deepEqual(mockSendRequest.callCount, singleNamedServices.length + pluralNamedServices.length);
 });
 
 test('provide their resource path when calling send request function', it => {
-    services.forEach(function(service, index){
-        GiantBombAPI[service](mockOptions, mockCallback);
+    singleNamedServices.forEach(function(service, index){
+        GiantBombAPI[service](mockId, mockOptions, mockCallback);
+        it.deepEqual(mockSendRequest.lastCall.args[0], singleNamedResources[index] + '/' + mockId + '/');
+    });
 
-        it.deepEqual(mockSendRequest.lastCall.args[0], resources[index] + '/');
+    pluralNamedServices.forEach(function(service, index){
+        GiantBombAPI[service](mockOptions, mockCallback);
+        it.deepEqual(mockSendRequest.lastCall.args[0], pluralNamedResources[index] + '/');
     });
 });
 
 test('serialize options into a query string when calling send request function', it => {
     var mockQueryString = querystring.stringify(mockOptions);
 
-    services.forEach(function(service){
+    singleNamedServices.forEach(function(service){
+        GiantBombAPI[service](mockId, mockOptions, mockCallback);
+
+        it.deepEqual(mockSendRequest.lastCall.args[1], mockQueryString);
+    });
+
+    pluralNamedServices.forEach(function(service){
         GiantBombAPI[service](mockOptions, mockCallback);
 
         it.deepEqual(mockSendRequest.lastCall.args[1], mockQueryString);
