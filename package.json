@@ -2,7 +2,7 @@
   "name": "giantbombing-api",
   "version": "1.0.1",
   "description": "Easy to use GiantBomb API wrapper for NodeJS",
-  "main": "./lib/",
+  "main": "./lib/giantbomb.js",
   "scripts": {
     "test": "ava tests/*",
     "example": "node ./example/app.js"
