@@ -1,14 +1,14 @@
-// Examples on how to use the GiantBomb API Wrapper
-var GiantBombAPI = require('../lib/giantbomb');
+"use strict";
 
-var config = {
+// Examples on how to use the GiantBomb API Wrapper
+const GiantBombAPI = require('../lib/giantbomb');
+const config = {
     apiKey: 'Your GiantBomb API code here'
 };
-
-var giantBombAPI = new GiantBombAPI(config);
+const giantBombAPI = new GiantBombAPI(config);
 
 // Example 1 - We want to search through GiantBomb's catalog for Metroid Prime 3 and its game ID
-var options = {
+let options = {
     field_list: 'name,id',
     query: 'Metroid Prime 3: Corruption',
     resources: 'game',
@@ -25,7 +25,7 @@ giantBombAPI.getSearch(options, function(err, res) {
 
 
 // Example 2 - We want the name, deck (a short desc), and platforms 'Metroid Prime 3' is on
-var options = {
+options = {
     field_list: 'name,deck,platforms',
 };
 
@@ -38,7 +38,7 @@ giantBombAPI.getGame('4725', options, function(err, res) {
 
 
 // Example 3 - We want to find Unprofessional Fridays videos, sorted by publish date
-var options = {
+options = {
     sort: {
         publish_date: 'desc'
     },
