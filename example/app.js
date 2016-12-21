@@ -3,7 +3,8 @@
 // Examples on how to use the GiantBomb API Wrapper
 const GiantBombAPI = require('../lib/giantbomb');
 const config = {
-    apiKey: 'Your GiantBomb API code here'
+    apiKey: 'Your GiantBomb API code here',
+    userAgent: 'A User Agent to Identify This Script'
 };
 const giantBombAPI = new GiantBombAPI(config);
 
