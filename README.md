@@ -12,7 +12,8 @@ A NodeJS wrapper for the GiantBomb API. You can use the GiantBomb API to find bi
 ```
 const GiantBombAPI = require('giantbombing-api');
 const config = {
-    apiKey: 'Your GiantBomb API code here'
+    apiKey: 'Your GiantBomb API code here',
+    userAgent: 'A User Agent or Name to Identify This Script'
 };
 const giantBombAPI = new GiantBombAPI(config);
 ```
