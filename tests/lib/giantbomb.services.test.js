@@ -68,6 +68,7 @@ var pluralNamedResources = [
 test.before('Set up GiantBombAPI', it => {
     var mockConfig = {
         apiKey: '12345abc',
+	userAgent: 'Example User Agent'
     };
 
     GiantBombAPI = new giantbombapi(mockConfig);

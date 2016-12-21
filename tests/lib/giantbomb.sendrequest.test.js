@@ -23,6 +23,7 @@ var mockBody;
 test.before('Set up GiantBombAPI', it => {
     var mockConfig = {
         apiKey: '12345abc',
+	userAgent: 'Example User Agent'
     };
 
     GiantBombAPI = new giantbombapi(mockConfig);
@@ -49,14 +50,20 @@ test('passes resource path to request method', it => {
     GiantBombAPI.sendRequest(mockResourcePath, mockOptionsQuery, mockCallback);
 
     var regex = new RegExp(mockResourcePath, 'g');
-    it.regex(mockRequest.firstCall.args[0], regex);
+    it.regex(mockRequest.firstCall.args[0].url, regex);
 });
 
 test('passes query to request method', it => {
     GiantBombAPI.sendRequest(mockResourcePath, mockOptionsQuery, mockCallback);
 
     var regex = new RegExp(mockOptionsQuery, 'g');
-    it.regex(mockRequest.firstCall.args[0], regex);
+    it.regex(mockRequest.firstCall.args[0].url, regex);
+});
+
+test('passes user-agent to request method', it => {
+    GiantBombAPI.sendRequest(mockResourcePath, mockOptionsQuery, mockCallback);
+
+    it.is(mockRequest.firstCall.args[0].headers['User-Agent'], 'Example User Agent');
 });
 
 test.before('Mock parameters for mocked request callback', it => {

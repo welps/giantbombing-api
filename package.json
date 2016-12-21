@@ -29,7 +29,7 @@
     "request": "^2.69.0"
   },
   "devDependencies": {
-    "ava": "^0.15.*",
+    "ava": "^0.17.*",
     "rewire": "^2.5.1",
     "sinon": "^1.17.3"
   },

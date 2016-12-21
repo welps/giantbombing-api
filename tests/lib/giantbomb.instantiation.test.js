@@ -15,6 +15,7 @@ var GiantBombFactory = function (config){
 test.before('Set up GiantBombAPI', it => {
     var mockConfig = {
         apiKey: '12345abc',
+	userAgent: 'Example User Agent'
     };
 
     GiantBombAPI = GiantBombFactory(mockConfig)();
