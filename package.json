@@ -1,6 +1,6 @@
 {
   "name": "giantbombing-api",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Easy to use GiantBomb API wrapper for NodeJS",
   "main": "./lib/giantbomb.js",
   "scripts": {
